@@ -6,6 +6,8 @@ on:
   workflow_dispatch:
 
 permissions:
+  contents: write
+
 jobs:
   build-video:
     runs-on: ubuntu-latest
@@ -20,22 +22,4 @@ jobs:
 
       - name: Install Libraries
         run: |
-          pip install requests edge-tts moviepy==1.0.3 imageio-ffmpeg
-
-      - name: Make Video
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-        run: python main.py
-
-      - name: Upload Video File
-        run: |
-          git config user.name "AI Bot"
-          git config user.email "bot@github.com"
-          git add latest_reel.mp4
-          git commit -m "Update daily reel" || echo "No changes"
-          git push
-
-      - name: Send to Make.com
-        run: |
-          curl -X POST -H "Content-Type: application/json" -d @post_data.json ${{ secrets.MAKE_WEBHOOK_URL }}
+          pip install requests edge-tts moviepy==1.0.3 langchain-ollama
